@@ -5,11 +5,12 @@ const ESLintPlugin = require('eslint-webpack-plugin');
 const { getPath } = require('./utils');
 
 module.exports = {
-    entry: {
-        uploader: './src/index.js',
-    },
+    // entry: {
+    //     uploader: './src/uploader.js',
+    // },
     output: {
-        filename: '[name].[contenthash].js',
+        // filename: '[name].[contenthash].js',
+        filename: '[name].js',
     },
     resolve: {
         alias: {

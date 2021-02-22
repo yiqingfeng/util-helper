@@ -259,7 +259,6 @@ class Uploader {
             this.chunk.data = {
                 ...data.data,
             }
-            let task
             if (data.chunkSize && data.chunkSize !== size) {
                 // ;[chunks, task, last] = this.doSlice(data.chunkSize)
                 task = this.doSlice(data.chunkSize)[1]
@@ -322,37 +321,35 @@ class Uploader {
                     data: res,
                     tasks: null,
                 }
-            } else {
+            } else if (res.IsChunkFile) {
                 // 有未上传的分片
-                if (res.IsChunkFile) {
-                    // eslint-disable-line no-lonely-if
-                    let list = res.ChunkedList, // 已上传的分片
-                        k = [],
-                        t = []
-                    for (let i = 0; i < list.length; i++) {
-                        k.push(list[i].Index) // 分片的index值是从0开始记录的，在doSlice里
+                let list = res.ChunkedList || [], // 已上传的分片
+                    k = [],
+                    t = []
+                for (let i = 0; i < list.length; i++) {
+                    // 注意：前端分片的 index 值是从0开始记录的，在doSlice里；后台的 Index 从 1 开始的
+                    k.push(list[i].Index - 1)
+                }
+                // todo, 循环之前从1开始的
+                for (let i = 0; i < opts.chunkCount; i++) {
+                    if (k.indexOf(i) === -1) {
+                        t.push(i)
                     }
-                    // todo, 循环之前从1开始的
-                    for (let i = 0; i < opts.chunkCount; i++) {
-                        if (k.indexOf(i) === -1) {
-                            t.push(i)
-                        }
-                    }
-                    return {
-                        data: {
-                            Path: res.Path,
-                        },
-                        tasks: t, // 未上传的分片
-                    }
-                } else {
-                    // 所有分片上传完成，已合成文件
-                    return {
-                        data: {
-                            Path: res.Path,
-                        },
-                        chunkSize: res.ChunkSize,
-                        tasks: 'done',
-                    }
+                }
+                return {
+                    data: {
+                        Path: res.Path,
+                    },
+                    tasks: t, // 未上传的分片
+                }
+            } else {
+                // 所有分片上传完成，已合成文件
+                return {
+                    data: {
+                        Path: res.Path,
+                    },
+                    chunkSize: res.ChunkSize,
+                    tasks: 'done',
                 }
             }
         }
@@ -389,7 +386,7 @@ class Uploader {
      * @param  {[type]} tasks  [文件未上传的分片索引]
      */
     doWork(task, tasks) {
-        // console.log('doWork:',task,tasks);
+        // console.log('doWork:', task, tasks);
         if (tasks) {
             if (tasks !== 'done' && tasks.length > 0) {
                 // 文件还有未上传的分片
@@ -476,21 +473,22 @@ class Uploader {
             type: 'post',
             url: this.chunk.uploadUrl,
         })
-        this.reqs[blob.uid] = req.xhr
+        this._reqs[blob.uid] = req.xhr
         req.then(
             (res) => {
-                let data = res.data || {}
+                // let data = res.data || {}
+                let data = res || {}
                 if (data.IsSuccess) {
                     //一个分片上传成功
                     info.success = true
                     opts.current++
 
                     let a = opts.taskCount.length - info.length + opts.current
-                    this.onProgress({
+                    this.handleProgress({
                         total: opts.taskCount.length,
                         done: a,
                         percent: Math.round((a / opts.taskCount.length) * 100),
-                    })
+                    }, blob)
 
                     doTaskDoneCallback()
                 } else {
@@ -534,11 +532,11 @@ class Uploader {
         // console.log('chunkUploadEnd,',res);
         let result = res.result
         if (result.task === 0) {
-            //没有上传任务
-            this.onSuccess(res, this.chunk.rawFile)
+            // 没有上传任务
+            this.handleSuccess(res, this.chunk.rawFile)
         } else if (result.fail > 0) {
-            //有上传失败的任务
-            this.onError(res, this.chunk.rawFile)
+            // 有上传失败的任务
+            this.handleError(res, this.chunk.rawFile)
         } else {
             this.httpRequest({
                 url: this.chunk.doneUrl, //上传完成后处理接口
@@ -550,15 +548,15 @@ class Uploader {
             }).then(
                 (res2) => {
                     // console.log('chunkUploadEnd,',res2);
-                    let t = deepMerge(res, res2)
+                    let t = Object.assign(res, res2)
                     if (res2.IsSuccess) {
-                        this.onSuccess(t, this.chunk.rawFile)
+                        this.handleSuccess(t, this.chunk.rawFile)
                     } else {
-                        this.onError(t, this.chunk.rawFile)
+                        this.handleError(t, this.chunk.rawFile)
                     }
                 },
                 (err2) => {
-                    this.onError(res, this.chunk.rawFile)
+                    this.handleError(res, this.chunk.rawFile)
                 }
             )
         }

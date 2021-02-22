@@ -15,12 +15,16 @@ $input.addEventListener('change', (e) => {
     if (!files) return;
 
     uploadFiles(files, {
+        whenChunks: 2097152,
         events: {
             progress(event) {
                 $text.innerHTML = `${event.percent || 0}%`;
             },
             success(res) {
                 console.log(res);
+            },
+            error(err) {
+                console.log(err);
             }
         }
     });
