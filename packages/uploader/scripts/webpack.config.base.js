@@ -1,6 +1,7 @@
 /**
  * @description 资源打包
  */
+const ESLintPlugin = require('eslint-webpack-plugin');
 const { getPath } = require('./utils');
 
 module.exports = {
@@ -26,7 +27,10 @@ module.exports = {
                         presets: ['@babel/preset-env'],
                     }
                 }
-            }
+            },
         ]
-    }
+    },
+    plugins: [
+        new ESLintPlugin()
+    ]
 };

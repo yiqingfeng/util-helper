@@ -1,6 +1,6 @@
-import * as util from './util';
+import * as util from './util.js';
 
-var serialize = {
+const serialize = {
     postData: function (obj) {
         if (obj) {
             if (

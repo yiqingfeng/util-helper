@@ -1,18 +1,27 @@
 import { uploadFiles } from './uploader';
 
-const $uploader = document.querySelector('.m-uploader');
+const $uploader = document.querySelector('.uploader-upload-file');
 const $input = document.querySelector('.uploader-input');
+const $text = document.querySelector('.uploader-text');
 
-$uploader.addEventListener('click', function () {
+$uploader.addEventListener('click', () => {
     $input.value = null;
     $input.click();
 });
 
-$input.addEventListener('change', function (e) {
-    const files = e.target.files;
+$input.addEventListener('change', (e) => {
+    const { files } = e.target;
 
     if (!files) return;
 
-    console.log(files);
-    uploadFiles(files);
+    uploadFiles(files, {
+        events: {
+            progress(event) {
+                $text.innerHTML = `${event.percent || 0}%`;
+            },
+            success(res) {
+                console.log(res);
+            }
+        }
+    });
 });
