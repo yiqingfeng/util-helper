@@ -1,0 +1,25 @@
+{
+    "name": "file-uploader",
+    "version": "1.0.0",
+    "description": "file uploader",
+    "main": "index.js",
+    "scripts": {
+        "dev": "webpack --config scripts/webpack.config.dev.js",
+        "serve": "webpack-dev-server --config scripts/webpack.config.dev.js"
+    },
+    "keywords": [
+        "upload"
+    ],
+    "author": "daiq",
+    "license": "MIT",
+    "devDependencies": {
+        "@babel/core": "^7.12.17",
+        "@babel/preset-env": "^7.12.17",
+        "babel-loader": "^8.2.2",
+        "html-webpack-plugin": "^5.2.0",
+        "webpack": "^5.23.0",
+        "webpack-cli": "^3.3.12",
+        "webpack-dev-server": "^3.11.2",
+        "webpack-merge": "^5.7.3"
+    }
+}

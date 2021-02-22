@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= htmlWebpackPlugin.options.title %></title>
+    <style>
+        .m-uploader {
+            display: inline-block;
+        }
+        .uploader-button {
+            padding: 9px 15px;
+            border: 1px solid #ff8000;
+            border-radius: 3px;
+            outline: none;
+            background-color: #ff8000;
+            color: #fff;
+            font-size: 12px;
+            line-height: 1;
+            cursor: pointer;
+            transition: .15s;
+        }
+        .uploader-button:hover {
+            border-color: #f93;
+            background-color: #f93;
+        }
+        .uploader-input {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="m-uploader">
+        <button class="uploader-button">上传文件</button>
+        <input class="uploader-input" type="file" name="file">
+    </div>
+</body>
+</html>
