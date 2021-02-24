@@ -102,6 +102,14 @@ export default class Navs extends Vue {
                 opacity: 1;
                 transform: translateY(-4px);
             }
+
+            .item-desc {
+                left: -200px;
+                transform: translateX(80px);
+                z-index: 12;
+                transition: left 0.5s, z-index 0s, transform 0.5s;
+                transition-delay: 0s, 0.5s, 0.5s;
+            }
         }
 
         &-logo {
@@ -129,11 +137,20 @@ export default class Navs extends Vue {
             position: absolute;
             left: 50%;
             bottom: 1.3 * @logo-width;
+            z-index: 0;
 
             width: 3.6 * @logo-width;
             height: 4.8 * @logo-width;
             transform: translateX(-50%);
             // background-color: #fff;
+
+            // &:hover {
+            //     left: -200px;
+            //     transform: translateX(80px);
+            //     z-index: 12;
+            //     transition: left 0.5s, z-index 0s, transform 0.5s;
+            //     transition-delay: 0s, 0.5s, 0.5s;
+            // }
 
             &_img {
                 box-sizing: border-box;
