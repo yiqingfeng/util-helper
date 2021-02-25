@@ -82,6 +82,7 @@ export default class Navs extends Vue {
 }
 
 .p-content {
+    padding: 20px 100px 100px;
     background-color: #0396ff;
     color: #fff;
 }
@@ -89,9 +90,9 @@ export default class Navs extends Vue {
 
 .m-intron {
     display: flex;
+    justify-content: center;
     align-items: flex-end;
-    height: 400px;
-    margin: 0 200px;
+    height: 6.1 * @logo-width;
 
     .item {
         position: relative;
@@ -104,11 +105,18 @@ export default class Navs extends Vue {
             }
 
             .item-desc {
-                left: -200px;
-                transform: translateX(80px);
+                left: -1.9 * @logo-width;
+                transform: translateX(0.6 * @logo-width);
                 z-index: 12;
                 transition: left 0.5s, z-index 0s, transform 0.5s;
                 transition-delay: 0s, 0.5s, 0.5s;
+            }
+        }
+
+        &:last-child {
+            .item-desc {
+                transition: none;
+                transition-delay: 0s;
             }
         }
 
@@ -136,21 +144,13 @@ export default class Navs extends Vue {
         &-desc {
             position: absolute;
             left: 50%;
+            transform: translateX(-50%);
+            // left: - 3px
             bottom: 1.3 * @logo-width;
             z-index: 0;
 
             width: 3.6 * @logo-width;
             height: 4.8 * @logo-width;
-            transform: translateX(-50%);
-            // background-color: #fff;
-
-            // &:hover {
-            //     left: -200px;
-            //     transform: translateX(80px);
-            //     z-index: 12;
-            //     transition: left 0.5s, z-index 0s, transform 0.5s;
-            //     transition-delay: 0s, 0.5s, 0.5s;
-            // }
 
             &_img {
                 box-sizing: border-box;
